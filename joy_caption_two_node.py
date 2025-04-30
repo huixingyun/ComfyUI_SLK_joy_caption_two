@@ -28,7 +28,9 @@ DEVICE = get_torch_device()
 BASE_MODEL_PATH = Path(folder_paths.models_dir, "Joy_caption_two")
 
 def tensor2pil(t_image: torch.Tensor)  -> Image:
-    return Image.fromarray(np.clip(255.0 * t_image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
+    if t_image.ndim == 4:
+        t_image = t_image[0] # remove batch dim
+    return Image.fromarray(np.clip(255.0 * t_image.cpu().numpy(), 0, 255).astype(np.uint8))
 
 class JoyClipVisionModel:
     def __init__(self, load_device, offload_device):
